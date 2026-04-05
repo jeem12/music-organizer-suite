@@ -27,7 +27,7 @@ Ensure you have PHP 7.4 or higher installed and Composer available on your syste
 
 2. Clone the Repository
 Bash
-git clone https://github.com/yourusername/automated-music-organizer.git
+git clone https://github.com/jeem12/automated-music-organizer.git
 cd automated-music-organizer
 3. Install Dependencies
 Run the following command to pull the required metadata libraries:
