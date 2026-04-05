@@ -1,4 +1,9 @@
 <?php
+/**
+ * AUDIO ARCHIVE MANAGER // ENTERPRISE EDITION
+ * Engineering Lead: Automated Metadata Organization & Filename Refactoring
+ * Developed by: JM ESCOBAR
+ */
 
 require_once('vendor/autoload.php');
 
@@ -44,17 +49,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_process'])) {
                 $safeArtistName = trim($safeArtistName) ?: "Unknown Artist";
 
                 $artistPath = $targetDir . DIRECTORY_SEPARATOR . $safeArtistName;
-
                 if (!is_dir($artistPath)) {
                     @mkdir($artistPath, 0755, true);
                 }
 
-                $destination = $artistPath . DIRECTORY_SEPARATOR . $file->getFilename();
+                $originalFileName = $file->getFilename();
+                
+                if (stripos($originalFileName, $safeArtistName) === 0) {
+                    $newFileName = $originalFileName;
+                } else {
+                    $newFileName = $safeArtistName . " - " . $originalFileName;
+                }
+
+                $destination = $artistPath . DIRECTORY_SEPARATOR . $newFileName;
 
                 if (@rename($filePath, $destination)) {
-                    $logs[] = "Moved: " . $file->getFilename() . " → " . $safeArtistName;
+                    $logs[] = "Processed: " . $newFileName;
                 } else {
-                    $logs[] = "IO Error: File '" . $file->getFilename() . "' is in use or locked.";
+                    $logs[] = "IO Error: File '" . $originalFileName . "' is locked or in use.";
                 }
             }
         } catch (Exception $e) {
@@ -76,16 +88,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_process'])) {
         :root { --primary:rgb(50, 156, 73); --primary-hover: #2e7d32; --bg: #f3f4f6; --card: #ffffff; --text-dark: #111827; --text-light: #6b7280; --border: #e5e7eb; }
         body { background-color: var(--bg); color: var(--text-dark); font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
         .dashboard { width: 100%; max-width: 600px; background: var(--card); border-radius: 8px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid var(--border); overflow: hidden; }
-        .header { padding: 20px 32px; border-bottom: 1px solid var(--border); background: #fdfdfd; }
+        .header { padding: 20px 32px; border-bottom: 1px solid var(--border); background: #fdfdfd; display: flex; align-items: center; gap: 12px; }
+        .header img { width: 32px; height: 32px; border-radius: 50%; }
         .header h1 { font-size: 1.125rem; margin: 0; font-weight: 700; color: var(--text-dark); letter-spacing: -0.025em; }
-        form { padding: 8px 32px 20px 32px; }
+        form { padding: 20px 32px; }
         .input-box { margin-bottom: 15px; }
         label { display: block; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--text-light); margin-bottom: 8px; letter-spacing: 0.05em; }
         input[type="text"] { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.875rem; box-sizing: border-box; background: #f9fafb; transition: border 0.2s; }
         input[type="text"]:focus { outline: none; border-color: var(--primary); background: #fff; }
         button { width: 100%; background: var(--primary); color: #fff; border: none; padding: 12px; border-radius: 4px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
         button:hover { background: var(--primary-hover); }
-        .terminal { background: #111827; margin: 0 32px 20px 32px; border-radius: 6px; padding: 16px; max-height: 140px; overflow-y: auto; border: 1px solid #374151; }
+        .terminal { background: #111827; margin: 0 32px 20px 32px; border-radius: 6px; padding: 16px; max-height: 180px; overflow-y: auto; border: 1px solid #374151; }
         .log { font-family: 'Consolas', monospace; font-size: 0.75rem; color: #d1d5db; margin-bottom: 4px; border-bottom: 1px solid #1f2937; padding-bottom: 2px; }
         .success-footer { text-align: center; font-size: 0.75rem; color: #059669; padding-bottom: 10px; font-weight: 600; }
         .credits-footer { background: #f9fafb; padding: 15px; border-top: 1px solid var(--border); text-align: center; }
@@ -97,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_process'])) {
 
 <div class="dashboard">
     <div class="header">
+        <img src="logo.png" alt="Logo">
         <h1>Automated Music Organizer</h1>
     </div>
     
