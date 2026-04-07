@@ -1,9 +1,5 @@
 # 🎵 Automated Music Organizer (AMO)
 
-![Version](https://shields.io)
-![PHP](https://shields.io)
-![License](https://shields.io)
-
 **Automated Music Organizer** is a lightweight, PHP-based utility designed to transform chaotic music directories into structured libraries. It recursively scans folders, analyzes ID3 metadata, and dynamically organizes files into a clean hierarchy based on the **Artist Name**.
 
 ---
@@ -66,4 +62,51 @@ php -S localhost:8000
 - Define Target: Input the path where you want the organized library to be built.
 - Run Engine: Click "Run Organizer Engine".
 - Review Logs: Check the "Terminal" window at the bottom for a breakdown of every file moved.
-   -- Note: If a file is currently open in a player (like VLC), the system will flag an "IO Error" instead of crashing.
+  > Note: If a file is currently open in a player (like VLC), the system will flag an "IO Error" instead of crashing.
+
+## 📂 Project Structure
+
+| File / Folder       | Description                           |
+|--------------------|---------------------------------------|
+| `vendor/`          | Composer dependencies (getID3)        |
+| `index.php`        | Core logic and UI dashboard           |
+| `logo.png`         | System branding                        |
+| `composer.json`    | Dependency management                  |
+| `README.md`        | Documentation                          |
+
+## 🛡️ Engineering Notes
+
+### Path Sanitization Logic
+
+The system uses the following PHP regex to ensure that artists with "illegal" names (like `AC/DC`) do not break the file system:
+
+**$safeArtistName = preg_replace('#[\/:*?"<>|]#', '-', $artist);**
+
+### Directory Permissions
+> The system attempts to create folders with 0755 permissions. Ensure the user running the PHP process (e.g., www-data or your local user) has write access to both directories.
+
+## 🤝 Contributing
+
+To contribute to this project:
+
+- Fork the repository 🍴  
+- Create your feature branch:  
+  ```bash
+  git checkout -b feature/AmazingFeature
+```
+- Commit your changes:
+```bash
+git commit -m "Add some AmazingFeature"
+```
+- Push to the branch:
+  ```bash
+  git push origin feature/AmazingFeature
+  ```
+- Open a Pull Request ✨
+
+## 📜 License
+This project is distributed under the **MIT License**. See the [LICENSE](LICENSE) file for more details.
+
+---
+**Developed by:** JM ESCOBAR  
+**System Version:** 1.0.5
