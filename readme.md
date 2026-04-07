@@ -93,11 +93,11 @@ To contribute to this project:
 - Create your feature branch:  
   ```bash
   git checkout -b feature/AmazingFeature
-```
+  ```
 - Commit your changes:
-```bash
-git commit -m "Add some AmazingFeature"
-```
+  ```bash
+  git commit -m "Add some AmazingFeature"
+  ```
 - Push to the branch:
   ```bash
   git push origin feature/AmazingFeature
